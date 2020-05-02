@@ -5,14 +5,12 @@
     [
       app: :chat_server,
       version: "0.1.0",
-      build_path: "../../_build",
-      deps_path: "../../deps",
-      lockfile: "../../mix.lock",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       description: description(),
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -21,6 +19,12 @@
     [
       mod: {ChatServer.Application, []},
       extra_applications: [:logger, :runtime_tools]
+    ]
+  end
+  
+  defp aliases() do
+    [
+      setup: ["deps.compile", "compile"]
     ]
   end
 
@@ -39,6 +43,5 @@
   defp description() do
     "A server for Chat applications."
   end
-
-
+  
 end

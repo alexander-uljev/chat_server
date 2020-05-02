@@ -1,0 +1,1 @@
+MIX_ENV=prod elixir --name server0@127.0.0.1 -S mix phx.server --no-halt

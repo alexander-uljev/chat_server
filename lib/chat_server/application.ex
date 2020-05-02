@@ -6,7 +6,7 @@ defmodule ChatServer.Application do
   @supported_modes [:local_mono, :local_multi, :distributed, :mixed]
 
   def start(_type, args \\ []) do
-    mode = args[:mode] || get_mode!()
+    mode = get_mode!()
     mode in @supported_modes or unsupported_mode_error!(mode)
     maybe_start_node(mode)
     start_sessions_table()
@@ -83,6 +83,10 @@ defmodule ChatServer.Application do
     end
   end
 
+  defp env_mode() do
+    Application.get_env(:chat_server, :mode)
+  end
+
   defp config_mode() do
     try do
       config = Config.Reader.read!("config/routes.exs")
@@ -91,10 +95,6 @@ defmodule ChatServer.Application do
     rescue
       Code.LoadError -> false
     end
-  end
-
-  defp env_mode() do
-    Application.get_env(:chat_server, :mode)
   end
 
   defp undefined_mode!() do
