@@ -6,7 +6,7 @@ defmodule ChatServer.Application do
   @supported_modes [:local_mono, :local_multi, :distributed, :mixed]
 
   def start(_type, args \\ []) do
-    mode = get_mode!()
+    mode = args[:mode] || get_mode!()
     mode in @supported_modes or unsupported_mode_error!(mode)
     maybe_start_node(mode)
     start_sessions_table()
@@ -56,7 +56,8 @@ defmodule ChatServer.Application do
   end
 
   defp get_mode!() do
-    sys_env_mode() || options_mode() || config_mode() || undefined_mode!()
+    sys_env_mode() || options_mode() || env_mode() ||
+      config_mode() || undefined_mode!()
   end
 
   defp sys_env_mode() do
@@ -90,6 +91,10 @@ defmodule ChatServer.Application do
     rescue
       Code.LoadError -> false
     end
+  end
+
+  defp env_mode() do
+    Application.get_env(:chat_server, :mode)
   end
 
   defp undefined_mode!() do
